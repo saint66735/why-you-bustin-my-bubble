@@ -25,7 +25,7 @@ public class BalloonFloat : MonoBehaviour
         //rb.mass = SizeToVolume(size) * originalMass;
     }
 
-    float SizeToVolume(float size)
+    public float SizeToVolume(float size)
     {
         return Mathf.Pow(size / 4, 3) * Mathf.PI * (4 / 3.0f);
     }

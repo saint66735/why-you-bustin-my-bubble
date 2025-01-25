@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using UnityEngine;
 using Plane = UnityEngine.Plane;
@@ -9,24 +12,63 @@ public class ShipControl : MonoBehaviour
     public float speedIncrease = 0.8f;
     public float crankMoveSpeed = 1f;
     public float engineDrag = 0.99f;
-    
+    public float bubbleFloatForce = 10f;
+    public float gravity = 10f;
+
     public GameObject crank;
     public GameObject wheel;
+    public List<GameObject> assingedBubbleAnchors;
 
+    private Rigidbody rb;
+    private List<(GameObject, BalloonFloat)> bubbles;
     private float engineSpeed = 0f;
-    
-    
+
+
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
+        bubbles = assingedBubbleAnchors.Select(x => (x, x.GetComponentInChildren<BalloonFloat>())).ToList();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        crank.transform.Rotate( crank.transform.forward * engineSpeed * crankMoveSpeed);
+        
         engineSpeed *= engineDrag;
+
+        //Movement();
+        VisualEffects();
     }
+    
+    void Movement()
+    {
+        //forward
+        rb.AddForce(transform.forward * engineSpeed);
+        
+        //prevent rotation
+        
+        //gravity
+        Vector3 center = bubbles.Aggregate(Vector3.zero, (acc, x) => acc + x.Item1.transform.position) / bubbles.Count;
+        rb.AddForceAtPosition(Vector3.down * rb.mass,
+            center);
+       
+
+        //up
+        bubbles.ForEach(bubble =>
+        {
+            BalloonFloat floating = bubble.Item2;
+            Debug.DrawRay(bubble.Item1.transform.position,
+                Vector3.up * floating.SizeToVolume(floating.size) * bubbleFloatForce / 10f);
+            rb.AddForceAtPosition(Vector3.up * floating.SizeToVolume(floating.size) * bubbleFloatForce,
+                bubble.Item1.transform.position);
+        });
+    }
+    
+    void VisualEffects()
+    {
+        crank.transform.Rotate(crank.transform.forward * engineSpeed * crankMoveSpeed);
+    }
+
 
     public void RotateCrank(float amount)
     {
