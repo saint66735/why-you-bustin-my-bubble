@@ -54,7 +54,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _divide_color: 1
-    - _fresnel_power: 55.4
+    - _fresnel_power: -0.1
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
