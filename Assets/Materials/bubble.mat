@@ -55,9 +55,9 @@ Material:
     - _QueueOffset: 0
     - _divide_color: 1
     - _emision_power: 3.64
-    - _fresnel_power: 2.74
+    - _fresnel_power: 3.11
     - _wobble_magnitude: 0.064
     m_Colors:
-    - _Color: {r: 0.7761659, g: 0.952047, b: 0.9622642, a: 0.23529412}
+    - _Color: {r: 0.41037738, g: 1, b: 0.601593, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
