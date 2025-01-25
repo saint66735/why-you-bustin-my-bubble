@@ -6,7 +6,7 @@ public class BalloonFloat : MonoBehaviour
     [Range(0.25f, 4.0f)]
     public float size = 1.0f;
     public float sizeToFloatCoefficient = 10f;
-    private const float sizeToPhysicalSize = 2f;
+    private const float sizeToPhysicalSize = 4f;
     
     private float originalMass = 1.0f;
 
@@ -27,7 +27,7 @@ public class BalloonFloat : MonoBehaviour
 
     public float SizeToVolume(float size)
     {
-        return Mathf.Pow(size / 4, 3) * Mathf.PI * (4 / 3.0f);
+        return size; //Mathf.Pow(size / 4, 3) * Mathf.PI * (4 / 3.0f);
     }
 
     // Update is called once per frame

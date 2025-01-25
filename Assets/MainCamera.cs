@@ -22,8 +22,8 @@ public class MainCamera : MonoBehaviour
     {
         Vector3 moveExtraRotation = player.forward * Perlin(player.localPosition.x, player.localPosition.z, 0) 
                                     + player.right * Perlin(player.localPosition.x, -player.localPosition.z, 1);
-        Vector3 rotateExtraRotation = player.forward * Perlin(player.localRotation.y * 5, 0, 2) 
-                                    + player.right * Perlin(0, -player.localRotation.y * 5, 3);
+        Vector3 rotateExtraRotation = player.forward * Perlin(player.localRotation.eulerAngles.y * 5, 0, 2) 
+                                    + player.right * Perlin(0, -player.localRotation.eulerAngles.y * 5, 3);
         //Debug.Log(player.localPosition);
         //Debug.Log((moveExtraRotation) * shakeMagnitude);
         transform.localRotation = Quaternion.Euler( (moveExtraRotation) * shakeMagnitude);
