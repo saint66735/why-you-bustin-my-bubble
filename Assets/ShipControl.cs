@@ -28,6 +28,9 @@ public class ShipControl : NetworkBehaviour
     private List<(Anchor, BalloonFloat)> bubbles;
     private float engineSpeed = 0f;
 
+    bool isDead = false;
+    public GameObject deathEffect;
+
 
     void Start()
     {
@@ -44,6 +47,12 @@ public class ShipControl : NetworkBehaviour
         Movement();
         
         VisualEffects();
+
+        if (!isDead && transform.position.y<=-100)
+        {
+            Instantiate(deathEffect, transform.position, quaternion.identity);
+            isDead = true;
+        }
     }
     
     void Movement()

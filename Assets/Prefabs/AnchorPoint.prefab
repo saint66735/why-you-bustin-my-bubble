@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8193696782771357689}
   - component: {fileID: 6831906343347581228}
+  - component: {fileID: 8920606568045975395}
   - component: {fileID: 457001742331866853}
   m_Layer: 0
   m_Name: AnchorPoint
@@ -63,6 +64,31 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8920606568045975395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 212036284769063018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 753475058
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &457001742331866853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,6 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6963ec2701e78be4eb1a11758bce07f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   lever: {fileID: 2459553783358636324}
   balloon: {fileID: 4018110651599172895}
   hitSource: {fileID: 3467547934946737103}
@@ -528,7 +555,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -7511558181221131132, guid: af4fe905ab7cf0f43983acbd48ca540c, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: -6065348365850460379, guid: af4fe905ab7cf0f43983acbd48ca540c, type: 3}
+    - {fileID: -7579103995338469470, guid: af4fe905ab7cf0f43983acbd48ca540c, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: af4fe905ab7cf0f43983acbd48ca540c, type: 3}
