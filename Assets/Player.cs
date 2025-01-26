@@ -52,19 +52,23 @@ public class Player : NetworkBehaviour
     Rigidbody rb;
     
     public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
+    public NetworkVariable<Ray> MousePosition = new NetworkVariable<Ray>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<Vector3> MousePositionScreen = new NetworkVariable<Vector3>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     public bool loaded = false;
     
     void Start() {
         rb = GetComponent<Rigidbody>();
-        playerCamera = Camera.main;
+        
     }
 
     void FixedUpdate()
     {
-        playerCamera.transform.position = cameraSlot.position;
-        playerCamera.transform.parent = cameraSlot;
         //&& GameNetworkManager.instance.raceTime > 6f
-        if (!GameNetworkManager.instance.isFreeroam ) {
+        if (!GameNetworkManager.instance.isFreeroam && IsOwner ) {
+                MousePosition.Value = playerCamera.ScreenPointToRay(Input.mousePosition);
+                MousePositionScreen.Value = playerCamera.ScreenToViewportPoint(Input.mousePosition);
+            
+
             var horizontalInput = Input.GetAxis("Horizontal");
             var verticalInput = Input.GetAxis("Vertical");
             var mouseX = Input.GetAxis("Mouse X");
@@ -72,36 +76,53 @@ public class Player : NetworkBehaviour
             var handbrakeInput = Input.GetButton("Jump");
             var fire = Input.GetButton("Fire1");
             var mousePosition = Input.mousePosition;
+            Debug.Log(IsOwner +" " + Application.isFocused);
+            var t = new UserInputStruct(horizontalInput, verticalInput, handbrakeInput, fire, mouseX, mouseY,
+                mousePosition);
             if (IsOwner && Application.isFocused)
-                ControlCarServerRpc(new UserInputStruct(horizontalInput, verticalInput, handbrakeInput,fire, mouseX, mouseY, mousePosition));
+                ControlCarServerRpc(t);
+            
+            Controls(t);
+            if (state == State.Gun)
+            {
+                targetedGun.MyFixedUpdateRpc(t);
+            }
         }
     }
 
-    [ServerRpc]
-    void ControlCarServerRpc(UserInputStruct t, ServerRpcParams rpcParams = default) {
+    [Rpc(SendTo.Server)]
+    void ControlCarServerRpc(UserInputStruct t) {
         if (state != State.Gun)
         {
             rb.AddRelativeForce(Vector3.forward * t.verticalInput * speed, ForceMode.Acceleration);
             rb.AddRelativeTorque(Vector3.up * t.horizontalInput * rotationSpeed, ForceMode.Acceleration);
-            Controls(t);
+            //Controls(t);
         }
         
         previousShipAngularVelocity = ship.rb.angularVelocity;
         previousShipVelocity = ship.rb.GetPointVelocity(transform.position);
+
+        rb.linearVelocity = ship.rb.GetPointVelocity(transform.position);// + (previousShipVelocity - rb.linearVelocity) * drag;
+        rb.angularVelocity = ship.rb.angularVelocity;// + (previousShipAngularVelocity - rb.angularVelocity) * drag;
         
-        rb.linearVelocity = ship.rb.GetPointVelocity(transform.position) + (previousShipVelocity - rb.linearVelocity) * drag;
-        rb.angularVelocity = ship.rb.angularVelocity + (previousShipAngularVelocity - rb.angularVelocity) * drag;
     }
-    
+
+    [Rpc(SendTo.Owner)]
+    void enableCameraRpc(bool enable)
+    {
+        playerCamera.enabled = enable;
+        
+    }
+
     void Controls(UserInputStruct t)
     {
         if (t.fire)
         {
-            Ray ray = playerCamera.ScreenPointToRay(t.mousePosition);
+            Ray ray = MousePosition.Value ;
             // Does the ray intersect any objects excluding the player layer
             if (Physics.Raycast(ray, out RaycastHit hit, 5f))
             { 
-                //Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.yellow);
+                Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.yellow);
                 if (hit.collider.gameObject.CompareTag("Crank")) state = State.Crank;
                 if (hit.collider.gameObject.CompareTag("Wheel")) state = State.Wheel;
                 if (hit.collider.gameObject.CompareTag("Lever"))
@@ -112,35 +133,22 @@ public class Player : NetworkBehaviour
                 if (hit.collider.gameObject.CompareTag("Gun"))
                 {
                     targetedGun = hit.collider.gameObject.GetComponent<GunControl>();
-                    playerCamera.enabled = false;
-                    targetedGun.startShooting((() => {
-                        playerCamera.enabled = true;
+                    targetedGun.startShootingRpc((() =>
+                    {
+                        enableCameraRpc(true);
                         state = State.Nothing;
                     }));
                     state = State.Gun;
+                    enableCameraRpc(false);
                 }
             }
             else
             { 
-                //Debug.DrawRay(ray.origin, ray.direction * 1000, Color.white); 
+                Debug.DrawRay(ray.origin, ray.direction * 1000, Color.white); 
             }
-            
-            if (state == State.Crank)
-            {
-                ship.RotateCrank(t.mouseX);
-            }
-            if (state == State.Wheel)
-            {
-                ship.RotateWheel(ray);
-            }
-            if (state == State.Lever)
-            {
-                targetedAnchor.MoveLever((playerCamera.ScreenToViewportPoint(t.mousePosition).y-0.5f)*2f);
-            }
-            if (state == State.Gun)
-            {
-                targetedGun.MyFixedUpdate(t);
-            }
+
+            useControlsRpc(t, ray);
+
         }
         else if (state != State.Gun)
         {
@@ -148,14 +156,32 @@ public class Player : NetworkBehaviour
         }
         
     }
-    
-    
+
+    [Rpc(SendTo.Server)]
+    void useControlsRpc(UserInputStruct t, Ray ray)
+    {
+        if (state == State.Crank)
+        {
+            ship.RotateCrank(t.mouseX);
+        }
+        if (state == State.Wheel)
+        {
+            ship.RotateWheel(ray);
+        }
+        if (state == State.Lever)
+        {
+            targetedAnchor.MoveLever((MousePositionScreen.Value.y-0.5f)*2f);
+        }
+    }
+
+
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
         {
             Move();
-            
+            playerCamera.enabled = true;
+            //SetCamera(Camera.main);
         }
 
         loaded = true;
@@ -184,8 +210,20 @@ public class Player : NetworkBehaviour
     }
 
     Vector3 GetNextPositionOnPlane() {
-        //TODO
         return GameNetworkManager.instance.spawnPoints[NetworkManager.Singleton.ConnectedClients.Count-1].position;
     }
 
+    bool isPlayer()
+    {
+        return transform.parent.gameObject == GameNetworkManager.instance.playerClientInstance;
+    }
+
+    /*
+    public void SetCamera(Camera cam)
+    {
+        playerCamera = cam;
+        playerCamera.transform.position = cameraSlot.position;
+        playerCamera.transform.parent = cameraSlot;
+    }
+    */
 }

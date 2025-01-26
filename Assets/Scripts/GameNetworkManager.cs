@@ -132,5 +132,24 @@ public class GameNetworkManager : NetworkBehaviour {
       playerClientInstance = NetworkManager.Singleton.LocalClient.PlayerObject.gameObject;
     }
   }
-  
+
+  public void SetFreeroam(bool isFreeroam)
+  {
+    this.isFreeroam = isFreeroam;
+    Camera.main.GetComponent<FreeCamera>().enabled = isFreeroam;
+    if (isFreeroam)
+    {
+      Camera.main.enabled = true;
+      //Camera.main.transform.parent = null;
+      if(playerClientInstance)playerClientInstance.GetComponentInChildren<Player>().playerCamera.enabled = false;
+    }
+    else
+    {
+      Camera.main.enabled = false;
+      if(playerClientInstance)playerClientInstance.GetComponentInChildren<Player>().playerCamera.enabled = true;
+      ;
+    }
+
+  }
+
 }

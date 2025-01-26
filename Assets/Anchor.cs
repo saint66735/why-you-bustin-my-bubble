@@ -1,7 +1,8 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Anchor : MonoBehaviour
+public class Anchor : NetworkBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public GameObject lever;
@@ -47,7 +48,8 @@ public class Anchor : MonoBehaviour
             lever.transform.localPosition.z);
     }
 
-    public void GotHit()
+    [Rpc(SendTo.Everyone)]
+    public void GotHitRpc()
     {
         Debug.Log("shot");
         isShot = true;

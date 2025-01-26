@@ -1,10 +1,11 @@
 using System;
 using NUnit.Framework.Constraints;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class GunControl : MonoBehaviour
+public class GunControl : NetworkBehaviour
 {
 
     public float reloadTime = 2f;
@@ -28,7 +29,7 @@ public class GunControl : MonoBehaviour
     }
 
     // Update is called once per frame
-    public void MyFixedUpdate(UserInputStruct t)
+    public void MyFixedUpdateRpc(UserInputStruct t)
     {
         lastShot += Time.fixedDeltaTime;
         if (isShoot)
@@ -50,7 +51,7 @@ public class GunControl : MonoBehaviour
                     Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.yellow, 5f);
                     if (hit.collider.gameObject.CompareTag("Bubble"))
                     {
-                        hit.collider.GetComponentInParent<Anchor>().GotHit();
+                        hit.collider.GetComponentInParent<Anchor>().GotHitRpc();
                     }
                 }
             }
@@ -66,7 +67,7 @@ public class GunControl : MonoBehaviour
         }
     }
 
-    public void startShooting(Action callback)
+    public void startShootingRpc(Action callback)
     {
         localCamera.enabled = true;
         Cursor.lockState = CursorLockMode.Locked;

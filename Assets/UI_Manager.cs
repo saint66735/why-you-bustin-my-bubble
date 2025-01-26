@@ -49,19 +49,17 @@ public class UI_Manager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.P)) {
-            GameNetworkManager.instance.isFreeroam = true;
+            //GameNetworkManager.instance.SetFreeroam(true);
             OnJoin();
         }
         if (Input.GetKeyDown(KeyCode.O)) {
             //TODO
-            //GameNetworkManager.instance.isFreeroam = true;
+            //GameNetworkManager.instance.SetFreeroam(true);
             OnHost();
         }
-        if (Input.GetKeyDown(KeyCode.L)) {
-            GameNetworkManager.instance.isFreeroam = !GameNetworkManager.instance.isFreeroam;
-            //TODO
-            //Camera.main.GetComponent<FreeCamera>().enabled = GameNetworkManager.instance.isFreeroam;
-            //Camera.main.GetComponent<CameraScript>().enabled = !GameNetworkManager.instance.isFreeroam;
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            GameNetworkManager.instance.SetFreeroam(!GameNetworkManager.instance.isFreeroam);
         }
     }
     public void OnQuit()
