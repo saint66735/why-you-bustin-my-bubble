@@ -11,14 +11,11 @@ using Random = UnityEngine.Random;
 
 public class GameNetworkManager : NetworkBehaviour {
   // Start is called before the first frame update
-  public List<GameObject> playerPrefabs;
-  public GameObject chainPrefab;
+  public List<GameObject> playerPrefabs; 
   public GameObject playerClientInstance;
   public static GameNetworkManager instance;
-  //public List<NetworkObject> playerInstances;
   public List<GameObject> otherPlayerObjects;
   public List<NetworkObject> playerInstances;
-  public GameObject chain;
   public List<Transform> spawnPoints;
   public UI_Manager UIManagerScript;
   public float raceTime = 0;
@@ -57,9 +54,9 @@ public class GameNetworkManager : NetworkBehaviour {
         //TODO
       }
       else {
-        SpawnServerRpc(NetworkManager.LocalClient.ClientId);
+        //SpawnServerRpc(NetworkManager.LocalClient.ClientId);
       }
-
+      SpawnServerRpc(NetworkManager.LocalClient.ClientId);
       
     }
   }
@@ -101,6 +98,7 @@ public class GameNetworkManager : NetworkBehaviour {
     var playerPrefab = playerPrefabs[Random.Range(0, playerPrefabs.Count)];
     GameObject go = (GameObject)Instantiate(playerPrefab, Vector3.zero, Quaternion.Euler(Vector3.left));
     go.GetComponent<NetworkObject>().SpawnAsPlayerObject(id, true);
+    Debug.Log("Spawned player");
   }
   private void ConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
   {
@@ -113,23 +111,22 @@ public class GameNetworkManager : NetworkBehaviour {
   
   // Update is called once per frame
   void Update() {
-    if (true || IsServer) {
-      var _otherPlayerObjects = FindObjectsOfType<PlayerScript>().Select(x=>x.gameObject);
+    
+      var _otherPlayerObjects = FindObjectsOfType<Player>().Select(x=>x.gameObject);
       if (otherPlayerObjects == null || _otherPlayerObjects.Count() != otherPlayerObjects.Count()) otherPlayerObjects = new List<GameObject>(_otherPlayerObjects);
-    }
-    if (IsServer) {
+    
+    if (IsServer && NetworkManager.Singleton) {
       var _playerInstances = NetworkManager.Singleton.ConnectedClients
         .Select(x => x.Value.PlayerObject).Where(x=>x!=null).AsReadOnlyList();
       if (playerInstances == null || playerInstances.Count != _playerInstances.Count()) playerInstances = new List<NetworkObject>(_playerInstances);
     }
     
-    if (playerInstances.Count >= 2) {
+    //TODO
+    Debug.Log(playerInstances.Count);
+    if (playerInstances.Count >= 1) {
       if(!raceStarted.Value) StartRace();
     }
-    if (otherPlayerObjects.Count >= 2 && chain == null) {
-      
-    }
-    
+
     if (raceStarted.Value == true) raceTime += Time.deltaTime;
 
     if (IsClient && playerClientInstance == null && NetworkManager.LocalClient.PlayerObject!=null) {

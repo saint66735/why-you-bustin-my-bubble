@@ -28,14 +28,14 @@ public class GunControl : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    public void MyFixedUpdate(UserInputStruct t)
     {
         lastShot += Time.fixedDeltaTime;
         if (isShoot)
         {
-            transform.localRotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"));
+            transform.localRotation *= Quaternion.Euler(0, t.horizontalInput, -t.verticalInput);
             transform.localRotation = Quaternion.Euler(0, transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z);
-            if (Input.GetButton("Fire1") && lastShot > reloadTime)
+            if (t.fire && lastShot > reloadTime)
             {
                 boom.Play();
                 audioSource.PlayOneShot(audioClip);
@@ -55,7 +55,7 @@ public class GunControl : MonoBehaviour
                 }
             }
 
-            if (Input.GetButton("Jump"))
+            if (t.jump)
             {
                 localCamera.enabled = false;
                 Cursor.visible = true;

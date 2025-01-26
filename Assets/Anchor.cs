@@ -26,12 +26,6 @@ public class Anchor : MonoBehaviour
         originalLeverPosition = lever.transform.localPosition.y;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-       
-    }
-
     void FixedUpdate()
     {
         if (isShot)
@@ -40,7 +34,6 @@ public class Anchor : MonoBehaviour
             if (shotCoolDownTimer >= shotCoolDown)
             {
                 isShot = false;
-                //balloon.gameObject.SetActive(true);
             }
         }
 
@@ -50,25 +43,6 @@ public class Anchor : MonoBehaviour
 
     public void MoveLever(float amount)
     {
-        /*
-        //Create a new plane with normal (0,0,1) at the position away from the camera you define in the Inspector. This is the plane that you can click so make sure it is reachable.
-        Plane plane = new Plane(lever.transform.right, lever.transform.position);
-        //Plane plane = new Plane(wheel.transform.forward, wheel.transform.position);
-        float enter = 0.0f;
-
-        if (plane.Raycast(ray, out enter))
-        {
-            Debug.DrawRay(ray.origin, ray.direction * enter, Color.yellow);
-            
-            Vector3 intersection = ray.origin + (ray.direction * enter);
-            Debug.DrawRay(intersection, lever.transform.right * enter, Color.yellow);
-            
-            Vector3 localPos = intersection - lever.transform.localPosition;
-            
-            lever.transform.localPosition = new Vector3(lever.transform.localPosition.x, Mathf.Clamp(localPos.y, originalLeverPosition - leverMotionRange, originalLeverPosition + leverMotionRange),
-                lever.transform.localPosition.z);
-        }
-        */
         lever.transform.localPosition = new Vector3(lever.transform.localPosition.x, originalLeverPosition + leverMotionRange * (Mathf.Clamp(amount, -0.5f, 0.5f)),
             lever.transform.localPosition.z);
     }

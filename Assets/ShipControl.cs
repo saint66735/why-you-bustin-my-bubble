@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Unity.Mathematics;
+using Unity.Netcode;
 using UnityEngine;
 using Plane = UnityEngine.Plane;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
-public class ShipControl : MonoBehaviour
+public class ShipControl : NetworkBehaviour
 {
     public float speedIncrease = 0.8f;
     public float crankMoveSpeed = 1f;

@@ -15,16 +15,14 @@ public class PlayerScript : NetworkBehaviour
 
     private float horizontalInput;
     [HideInInspector]
-    public float verticalInput;
+    private float verticalInput;
     private Vector3 movedirection;
-    //NetworkVariable<WheelScript[]> wheels = new NetworkVariable<WheelScript[]>();
-    private Rigidbody rigidBody;
     
     
     private float resetTimer = 0f;
     
     void Start() {
-        rigidBody = GetComponent<Rigidbody>();
+
     }
 
     public override void OnNetworkSpawn()
@@ -61,17 +59,20 @@ public class PlayerScript : NetworkBehaviour
     }
 
     Vector3 GetNextPositionOnPlane() {
-        return GameNetworkManager.instance.spawnPoints[NetworkManager.Singleton.ConnectedClients.Count-1].position;
+        return GameNetworkManager.instance.spawnPoints[0].position;
     }
 
     void Update() {
-        if (!GameNetworkManager.instance.isFreeroam && GameNetworkManager.instance.raceTime > 6f) {
+        //&& GameNetworkManager.instance.raceTime > 6f
+        if (!GameNetworkManager.instance.isFreeroam ) {
             horizontalInput = Input.GetAxis("Horizontal");
             verticalInput = Input.GetAxis("Vertical");
+            var mouseX = Input.GetAxis("Mouse X");
+            var mouseY = Input.GetAxis("Mouse Y");
             var handbrakeInput = Input.GetButton("Jump");
             var reset = Input.GetButton("Fire1");
             if (IsOwner && Application.isFocused)
-                ControlCarServerRpc(new UserInputStruct(horizontalInput, verticalInput, handbrakeInput,reset));
+                ControlCarServerRpc(new UserInputStruct(horizontalInput, verticalInput, handbrakeInput,reset, mouseX, mouseY));
         }
     }
 
@@ -79,14 +80,18 @@ public class PlayerScript : NetworkBehaviour
         public float horizontalInput;
         public float verticalInput;
         public bool handbrakeInput;
-        public bool reset;
+        public bool jump;
+        public float mouseX;
+        public float mouseY;
 
 
-        public UserInputStruct(float horizontalInput, float verticalInput, bool handbrakeInput, bool reset) {
+        public UserInputStruct(float horizontalInput, float verticalInput, bool handbrakeInput, bool jump, float mouseX, float mouseY) {
             this.horizontalInput = horizontalInput;
             this.verticalInput = verticalInput;
             this.handbrakeInput = handbrakeInput;
-            this.reset = reset;
+            this.jump = jump;
+            this.mouseX = mouseX;
+            this.mouseY = mouseY;
         }
     }
 
