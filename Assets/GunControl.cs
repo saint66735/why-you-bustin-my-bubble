@@ -77,5 +77,10 @@ public class GunControl : NetworkBehaviour
         lastShot = reloadTime - 0.1f;
     }
 
-    //public void Fire()
+    [Rpc(SendTo.Everyone)]
+    public void FireRpc()
+    {
+        boom.Play();
+        audioSource.PlayOneShot(audioClip);
+    }
 }

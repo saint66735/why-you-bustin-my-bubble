@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -48,7 +49,7 @@ public class Player : NetworkBehaviour
     private Vector3 previousShipVelocity = Vector3.zero;
     private Vector3 previousShipAngularVelocity = Vector3.zero;
     
-    Rigidbody rb;
+    //Rigidbody rb;
     
     public NetworkVariable<Vector3> Position = new NetworkVariable<Vector3>();
     public NetworkVariable<Ray> MousePosition = new NetworkVariable<Ray>(default, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
@@ -56,13 +57,25 @@ public class Player : NetworkBehaviour
     public bool loaded = false;
     
     void Start() {
-        rb = GetComponent<Rigidbody>();
+        //rb = GetComponent<Rigidbody>();
         
     }
 
     void FixedUpdate()
     {
         //&& GameNetworkManager.instance.raceTime > 6f
+        if (IsOwner)
+        {
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                ship.ExplodeRpc();
+            }
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                ship.guns[0].FireRpc();
+            }
+        }
+
         if (!GameNetworkManager.instance.isFreeroam && IsOwner ) {
                 MousePosition.Value = playerCamera.ScreenPointToRay(Input.mousePosition);
                 MousePositionScreen.Value = playerCamera.ScreenToViewportPoint(Input.mousePosition);
@@ -86,6 +99,7 @@ public class Player : NetworkBehaviour
             {
                 targetedGun.MyFixedUpdateRpc(t);
             }
+           
         }
     }
 
@@ -93,16 +107,18 @@ public class Player : NetworkBehaviour
     void ControlCarServerRpc(UserInputStruct t) {
         if (state != State.Gun)
         {
-            rb.AddRelativeForce(Vector3.forward * t.verticalInput * speed, ForceMode.Acceleration);
-            rb.AddRelativeTorque(Vector3.up * t.horizontalInput * rotationSpeed, ForceMode.Acceleration);
+            //rb.AddRelativeForce(Vector3.forward * t.verticalInput * speed, ForceMode.Acceleration);
+            //rb.AddRelativeTorque(Vector3.up * t.horizontalInput * rotationSpeed, ForceMode.Acceleration);
+            transform.localPosition += Vector3.forward * t.verticalInput * speed;
+            transform.localRotation *= Quaternion.Euler(Vector3.up * t.horizontalInput * rotationSpeed);
             //Controls(t);
         }
         
         previousShipAngularVelocity = ship.rb.angularVelocity;
         previousShipVelocity = ship.rb.GetPointVelocity(transform.position);
 
-        rb.linearVelocity = ship.rb.GetPointVelocity(transform.position);// + (previousShipVelocity - rb.linearVelocity) * drag;
-        rb.angularVelocity = ship.rb.angularVelocity;// + (previousShipAngularVelocity - rb.angularVelocity) * drag;
+        //rb.linearVelocity = ship.rb.GetPointVelocity(transform.position);// + (previousShipVelocity - rb.linearVelocity) * drag;
+        //rb.angularVelocity = ship.rb.angularVelocity;// + (previousShipAngularVelocity - rb.angularVelocity) * drag;
         
     }
 
@@ -211,18 +227,5 @@ public class Player : NetworkBehaviour
     Vector3 GetNextPositionOnPlane() {
         return GameNetworkManager.instance.spawnPoints[NetworkManager.Singleton.ConnectedClients.Count-1].position;
     }
-
-    bool isPlayer()
-    {
-        return transform.parent.gameObject == GameNetworkManager.instance.playerClientInstance;
-    }
-
-    /*
-    public void SetCamera(Camera cam)
-    {
-        playerCamera = cam;
-        playerCamera.transform.position = cameraSlot.position;
-        playerCamera.transform.parent = cameraSlot;
-    }
-    */
+    
 }

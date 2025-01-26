@@ -2178,7 +2178,9 @@ MonoBehaviour:
   m_InputFlowSlot:
   - link: []
   m_OutputFlowSlot:
-  - link: []
+  - link:
+    - context: {fileID: 8926484042661614977}
+      slotIndex: 0
   eventName: OnKill
 --- !u!114 &8926484042661614976
 MonoBehaviour:
@@ -2225,7 +2227,9 @@ MonoBehaviour:
   m_Label: 
   m_Data: {fileID: 8926484042661614978}
   m_InputFlowSlot:
-  - link: []
+  - link:
+    - context: {fileID: 8926484042661614975}
+      slotIndex: 0
   - link: []
   m_OutputFlowSlot:
   - link:

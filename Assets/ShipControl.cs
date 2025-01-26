@@ -5,6 +5,7 @@ using System.Numerics;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.VFX;
 using Plane = UnityEngine.Plane;
 using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
@@ -21,6 +22,7 @@ public class ShipControl : NetworkBehaviour
 
     public GameObject crank;
     public GameObject wheel;
+    public VisualEffect ExplodeEffect;
     public List<GameObject> assingedBubbleAnchors;
     public List<GunControl> guns;
 
@@ -50,7 +52,7 @@ public class ShipControl : NetworkBehaviour
 
         if (!isDead && transform.position.y<=-100)
         {
-            Instantiate(deathEffect, transform.position, quaternion.identity);
+            ExplodeRpc();
             isDead = true;
         }
     }
@@ -132,5 +134,11 @@ public class ShipControl : NetworkBehaviour
             wheel.transform.localRotation = Quaternion.FromToRotation(direction,wheel.transform.up); //new Vector3(Mathf.Atan2(direction.y, direction.x)* 180 / Mathf.PI,0,0 )
             //
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void ExplodeRpc()
+    {
+        ExplodeEffect.SendEvent("OnKill");
     }
 }
