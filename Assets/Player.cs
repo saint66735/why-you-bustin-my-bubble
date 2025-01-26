@@ -63,20 +63,6 @@ public class Player : MonoBehaviour
         rb.linearVelocity = ship.rb.GetPointVelocity(transform.position) + (previousShipVelocity - rb.linearVelocity) * drag;
         rb.angularVelocity = ship.rb.angularVelocity + (previousShipAngularVelocity - rb.angularVelocity) * drag;
     }
-    
-    void KeepUpright()
-    {
-        Quaternion deltaQuat = Quaternion.FromToRotation(transform.up, ship.gameObject.transform.up);
-
-        Vector3 axis;
-        float angle;
-        deltaQuat.ToAngleAxis(out angle, out axis);
-        float keepUprightFactor = 0.8f;
-        rb.AddTorque(-rb.angularVelocity * keepUprightFactor, ForceMode.Acceleration);
-
-        float adjustFactor = keepUprightFactor; // this value requires tuning
-        rb.AddTorque(axis.normalized * angle * adjustFactor, ForceMode.Acceleration);
-    }
 
     void Controls()
     {

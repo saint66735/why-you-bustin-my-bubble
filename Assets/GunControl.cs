@@ -29,9 +29,8 @@ public class GunControl : MonoBehaviour
         lastShot += Time.fixedDeltaTime;
         if (isShoot)
         {
-            transform.Rotate(-transform.parent.forward * Input.GetAxis("Mouse Y"), Space.World);
-            transform.Rotate(transform.parent.up * Input.GetAxis("Mouse X"), Space.World);
-            //transform.localRotation = Quaternion.Euler(0, transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z);
+            transform.localRotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"));
+            transform.localRotation = Quaternion.Euler(0, transform.localRotation.eulerAngles.y, transform.localRotation.eulerAngles.z);
             if (Input.GetButton("Fire1") && lastShot > reloadTime)
             {
                 boom.Play();

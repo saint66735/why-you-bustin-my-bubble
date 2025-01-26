@@ -51,7 +51,7 @@ public class ShipControl : MonoBehaviour
         rb.AddForce(transform.forward * engineSpeed);
         
         //turning
-        //transform.Rotate(new Vector3(0,Mathf.Sin(wheel.transform.localRotation.eulerAngles.y*Mathf.PI / 2) * turnSpeed,0));
+        transform.Rotate(new Vector3(0,Mathf.Sin(wheel.transform.localRotation.eulerAngles.y*Mathf.PI / 2) * turnSpeed,0));
         
         //prevent rotation
         KeepUpright();
@@ -97,7 +97,7 @@ public class ShipControl : MonoBehaviour
 
     void VisualEffects()
     {
-        crank.transform.Rotate( transform.forward * engineSpeed * crankMoveSpeed, Space.Self);
+        crank.transform.localRotation *= Quaternion.Euler( Vector3.forward * engineSpeed * crankMoveSpeed);
     }
 
 
