@@ -6,6 +6,9 @@ public class Anchor : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public GameObject lever;
     public BalloonFloat balloon;
+    public AudioSource hitSource;
+    public AudioClip hitSound;
+    public AudioClip hissSound;
 
     public float adjustBalloonForce = 1.0f;
     public float shotCoolDown = 5f;
@@ -15,6 +18,7 @@ public class Anchor : MonoBehaviour
 
     private float leverPosition = 0f;
     private float originalLeverPosition;
+
     
     private float shotCoolDownTimer = 0.0f;
     void Start()
@@ -77,6 +81,8 @@ public class Anchor : MonoBehaviour
         adjustBalloonForce *= 0.9f;
         balloon.sizeToFloatCoefficient *= 0.9f;
         balloon.sizeToPhysicalSize *= 0.9f;
+        hitSource.PlayOneShot(hitSound);
+        hitSource.PlayOneShot(hissSound);
         //balloon.gameObject.SetActive(false);
     }
 }

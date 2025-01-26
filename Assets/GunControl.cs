@@ -13,14 +13,18 @@ public class GunControl : MonoBehaviour
     public VisualEffect boom;
     private AudioSource audioSource;
     public AudioClip audioClip;
+    public float recoilForce = 50f;
 
     private Action exitCallback;
     private bool isShoot = false;
     private float lastShot = 0f;
+
+    private Rigidbody ship;
     
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        ship = GetComponentInParent<ShipControl>().GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -36,6 +40,7 @@ public class GunControl : MonoBehaviour
                 boom.Play();
                 audioSource.PlayOneShot(audioClip);
                 lastShot = 0;
+                ship.AddForce(transform.right * recoilForce, ForceMode.Impulse);
 
                 Ray ray = new Ray(localCamera.transform.position, localCamera.transform.forward);
                 Debug.DrawRay(ray.origin, ray.direction * 50f, Color.white, 5f);
