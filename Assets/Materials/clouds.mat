@@ -40,10 +40,11 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _alpha_clip: 0.235
-    - _color_noise_scale: 30.02
-    - _movement_noise_scale: 4.2
-    - _movement_scale: 0.096
+    - _alpha_clip: 0.222
+    - _color_noise_scale: 300
+    - _movement_noise_scale: 3.44
+    - _movement_scale: 0.009
+    - _wind_speed: 0.000212
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
