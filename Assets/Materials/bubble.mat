@@ -58,6 +58,6 @@ Material:
     - _fresnel_power: 3.11
     - _wobble_magnitude: 0.064
     m_Colors:
-    - _Color: {r: 0.41037738, g: 1, b: 0.601593, a: 1}
+    - _Color: {r: 0.24056602, g: 1, b: 0.5554957, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -40,8 +40,8 @@ Material:
     m_Floats:
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _alpha_clip: 0.179
-    - _color_noise_scale: 62.44
+    - _alpha_clip: 0.235
+    - _color_noise_scale: 30.02
     - _movement_noise_scale: 4.2
     - _movement_scale: 0.096
     m_Colors: []
