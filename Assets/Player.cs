@@ -36,9 +36,12 @@ public class Player : MonoBehaviour
     
     void FixedUpdate()
     {
-        
-        rb.AddRelativeForce(Vector3.forward * Input.GetAxis("Vertical") * speed, ForceMode.Acceleration);
-        rb.AddRelativeTorque(Vector3.up * Input.GetAxis("Horizontal") * rotationSpeed, ForceMode.Acceleration);
+        if (state != State.Gun)
+        {
+            rb.AddRelativeForce(Vector3.forward * Input.GetAxis("Vertical") * speed, ForceMode.Acceleration);
+            rb.AddRelativeTorque(Vector3.up * Input.GetAxis("Horizontal") * rotationSpeed, ForceMode.Acceleration);
+            Controls();
+        }
         //rb.AddRelativeForce(Vector3.down * 0.1f, ForceMode.Acceleration);
         
         //try to match ship speed
@@ -50,7 +53,7 @@ public class Player : MonoBehaviour
         //keep upright with ship
         //KeepUpright();
         
-        Controls();
+        
         
         previousShipAngularVelocity = ship.rb.angularVelocity;
         previousShipVelocity = ship.rb.GetPointVelocity(transform.position);//ship.rb.linearVelocity;
@@ -91,6 +94,16 @@ public class Player : MonoBehaviour
                     targetedAnchor = hit.collider.gameObject.GetComponentInParent<Anchor>();
                     state = State.Lever;
                 }
+                if (hit.collider.gameObject.CompareTag("Gun"))
+                {
+                    GunControl gun = hit.collider.gameObject.GetComponent<GunControl>();
+                    playerCamera.enabled = false;
+                    gun.startShooting((() => {
+                        playerCamera.enabled = true;
+                        state = State.Nothing;
+                    }));
+                    state = State.Gun;
+                }
             }
             else
             { 
@@ -110,7 +123,7 @@ public class Player : MonoBehaviour
                 targetedAnchor.MoveLever((playerCamera.ScreenToViewportPoint(Input.mousePosition).y-0.5f)*2f);
             }
         }
-        else
+        else if (state != State.Gun)
         {
             state = State.Nothing;
         }

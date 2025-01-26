@@ -6,7 +6,7 @@ public class BalloonFloat : MonoBehaviour
     [Range(0.25f, 4.0f)]
     public float size = 1.0f;
     public float sizeToFloatCoefficient = 10f;
-    private const float sizeToPhysicalSize = 4f;
+    public float sizeToPhysicalSize = 4f;
     
     private float originalMass = 1.0f;
 

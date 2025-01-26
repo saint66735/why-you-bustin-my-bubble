@@ -21,16 +21,17 @@ public class ShipControl : MonoBehaviour
     public GameObject crank;
     public GameObject wheel;
     public List<GameObject> assingedBubbleAnchors;
+    public List<GunControl> guns;
 
     public Rigidbody rb;
-    private List<(GameObject, BalloonFloat)> bubbles;
+    private List<(Anchor, BalloonFloat)> bubbles;
     private float engineSpeed = 0f;
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        bubbles = assingedBubbleAnchors.Select(x => (x, x.GetComponentInChildren<BalloonFloat>())).ToList();
+        bubbles = assingedBubbleAnchors.Select(x => (x.GetComponent<Anchor>(), x.GetComponentInChildren<BalloonFloat>())).ToList();
     }
 
     // Update is called once per frame
@@ -63,11 +64,12 @@ public class ShipControl : MonoBehaviour
        
 
         //up
+        //FindAll(bubble => !bubble.Item1.isShot)
         bubbles.ForEach(bubble =>
         {
             BalloonFloat floating = bubble.Item2;
             Vector3 direction = Vector3.up * floating.SizeToVolume(floating.size) * bubbleFloatForce *
-                                bubble.Item2.sizeToFloatCoefficient;
+                                bubble.Item1.adjustBalloonForce;
             Debug.DrawRay(bubble.Item1.transform.position + direction * 200f,
                 direction * 100f);
             rb.AddForceAtPosition(direction, bubble.Item1.transform.position);

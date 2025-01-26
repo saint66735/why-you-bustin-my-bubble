@@ -77,6 +77,8 @@ MonoBehaviour:
   lever: {fileID: 2459553783358636324}
   balloon: {fileID: 4018110651599172895}
   adjustBalloonForce: 1
+  shotCoolDown: 15
+  isShot: 0
 --- !u!1 &2459553783358636324
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,7 +152,7 @@ GameObject:
   - component: {fileID: 6530649814425775811}
   m_Layer: 0
   m_Name: Baloon
-  m_TagString: Untagged
+  m_TagString: Bubble
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

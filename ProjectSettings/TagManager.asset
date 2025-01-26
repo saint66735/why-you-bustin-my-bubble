@@ -7,6 +7,8 @@ TagManager:
   - Crank
   - Wheel
   - Lever
+  - Gun
+  - Bubble
   layers:
   - Default
   - TransparentFX

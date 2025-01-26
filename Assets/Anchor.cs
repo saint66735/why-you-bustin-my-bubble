@@ -8,11 +8,15 @@ public class Anchor : MonoBehaviour
     public BalloonFloat balloon;
 
     public float adjustBalloonForce = 1.0f;
+    public float shotCoolDown = 5f;
+    public bool isShot = false;
 
     private float leverMotionRange = 0.5f;
 
     private float leverPosition = 0f;
     private float originalLeverPosition;
+    
+    private float shotCoolDownTimer = 0.0f;
     void Start()
     {
         originalLeverPosition = lever.transform.localPosition.y;
@@ -26,6 +30,16 @@ public class Anchor : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (isShot)
+        {
+            shotCoolDownTimer += Time.deltaTime;
+            if (shotCoolDownTimer >= shotCoolDown)
+            {
+                isShot = false;
+                //balloon.gameObject.SetActive(true);
+            }
+        }
+
         leverPosition = ((lever.transform.localPosition.y - originalLeverPosition) / leverMotionRange) / 2f;
         balloon.size = Mathf.Lerp(balloon.size, Mathf.Clamp(leverPosition + 1f, 0.2f, 2f), 0.02f) ;
     }
@@ -53,5 +67,16 @@ public class Anchor : MonoBehaviour
         */
         lever.transform.localPosition = new Vector3(lever.transform.localPosition.x, originalLeverPosition + leverMotionRange * (Mathf.Clamp(amount, -0.5f, 0.5f)),
             lever.transform.localPosition.z);
+    }
+
+    public void GotHit()
+    {
+        Debug.Log("shot");
+        isShot = true;
+        shotCoolDownTimer = 0;
+        adjustBalloonForce *= 0.9f;
+        balloon.sizeToFloatCoefficient *= 0.9f;
+        balloon.sizeToPhysicalSize *= 0.9f;
+        //balloon.gameObject.SetActive(false);
     }
 }
