@@ -145,7 +145,7 @@ public class GameNetworkManager : NetworkBehaviour {
     }
     else
     {
-      Camera.main.enabled = false;
+      //Camera.main.enabled = false;
       if(playerClientInstance)playerClientInstance.GetComponentInChildren<Player>().playerCamera.enabled = true;
       ;
     }

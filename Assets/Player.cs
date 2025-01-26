@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using Unity.Netcode;
 using UnityEngine;
@@ -61,7 +62,7 @@ public class Player : NetworkBehaviour
         
     }
 
-    void FixedUpdate()
+    void Update()
     {
         //&& GameNetworkManager.instance.raceTime > 6f
         if (IsOwner)
@@ -77,31 +78,46 @@ public class Player : NetworkBehaviour
         }
 
         if (!GameNetworkManager.instance.isFreeroam && IsOwner ) {
-                MousePosition.Value = playerCamera.ScreenPointToRay(Input.mousePosition);
-                MousePositionScreen.Value = playerCamera.ScreenToViewportPoint(Input.mousePosition);
+                //MousePosition.Value = playerCamera.ScreenPointToRay(Input.mousePosition);
+                //MousePositionScreen.Value = playerCamera.ScreenToViewportPoint(Input.mousePosition);
             
 
-            var horizontalInput = Input.GetAxis("Horizontal");
-            var verticalInput = Input.GetAxis("Vertical");
-            var mouseX = Input.GetAxis("Mouse X");
-            var mouseY = Input.GetAxis("Mouse Y");
-            var handbrakeInput = Input.GetButton("Jump");
-            var fire = Input.GetButton("Fire1");
-            var mousePosition = Input.mousePosition;
-            Debug.Log(IsOwner +" " + Application.isFocused);
-            var t = new UserInputStruct(horizontalInput, verticalInput, handbrakeInput, fire, mouseX, mouseY,
-                mousePosition);
-            if (IsOwner && Application.isFocused)
-                ControlCarServerRpc(t);
+          
             
-            Controls(t);
-            if (state == State.Gun)
-            {
-                targetedGun.MyFixedUpdateRpc(t);
-            }
+            Controls(getInputs());
+            
            
         }
     }
+
+    UserInputStruct getInputs()
+    {
+        var horizontalInput = Input.GetAxis("Horizontal");
+        var verticalInput = Input.GetAxis("Vertical");
+        var mouseX = Input.GetAxis("Mouse X");
+        var mouseY = Input.GetAxis("Mouse Y");
+        var handbrakeInput = Input.GetButton("Jump");
+        var fire = Input.GetButton("Fire1");
+        var mousePosition = Input.mousePosition;
+        //Debug.Log(IsOwner +" " + Application.isFocused);
+        return new UserInputStruct(horizontalInput, verticalInput, handbrakeInput, fire, mouseX, mouseY,
+            mousePosition);
+
+    }
+
+    void FixedUpdate()
+    {
+        if (!GameNetworkManager.instance.isFreeroam && IsOwner)
+        {
+            if (IsOwner && Application.isFocused)
+                ControlCarServerRpc(getInputs());
+            if (state == State.Gun)
+            {
+                targetedGun.MyFixedUpdateRpc(getInputs());
+            }
+        }
+    }
+
 
     [Rpc(SendTo.Server)]
     void ControlCarServerRpc(UserInputStruct t) {
@@ -109,7 +125,7 @@ public class Player : NetworkBehaviour
         {
             //rb.AddRelativeForce(Vector3.forward * t.verticalInput * speed, ForceMode.Acceleration);
             //rb.AddRelativeTorque(Vector3.up * t.horizontalInput * rotationSpeed, ForceMode.Acceleration);
-            transform.localPosition += Vector3.forward * t.verticalInput * speed;
+            transform.localPosition += transform.forward * t.verticalInput * speed;
             transform.localRotation *= Quaternion.Euler(Vector3.up * t.horizontalInput * rotationSpeed);
             //Controls(t);
         }
@@ -133,7 +149,7 @@ public class Player : NetworkBehaviour
     {
         if (t.fire)
         {
-            Ray ray = MousePosition.Value ;
+            Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition) ;
             // Does the ray intersect any objects excluding the player layer
             if (Physics.Raycast(ray, out RaycastHit hit, 5f))
             { 
@@ -162,7 +178,7 @@ public class Player : NetworkBehaviour
                 Debug.DrawRay(ray.origin, ray.direction * 1000, Color.white); 
             }
 
-            useControlsRpc(t, ray);
+            useControlsRpc(t, ray, (playerCamera.ScreenToViewportPoint(Input.mousePosition).y-0.5f)*2f);
 
         }
         else if (state != State.Gun)
@@ -173,7 +189,7 @@ public class Player : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server)]
-    void useControlsRpc(UserInputStruct t, Ray ray)
+    void useControlsRpc(UserInputStruct t, Ray ray, float leverAmount)
     {
         if (state == State.Crank)
         {
@@ -185,7 +201,7 @@ public class Player : NetworkBehaviour
         }
         if (state == State.Lever)
         {
-            targetedAnchor.MoveLever((MousePositionScreen.Value.y-0.5f)*2f);
+            targetedAnchor.MoveLever(leverAmount);
         }
     }
 
