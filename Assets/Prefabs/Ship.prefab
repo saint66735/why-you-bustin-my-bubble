@@ -135,6 +135,7 @@ MonoBehaviour:
   rotationSpeed: 50
   drag: 0
   cameraSlot: {fileID: 3054535561434301449}
+  playerCamera: {fileID: 0}
   ship: {fileID: 3066946822965425711}
   Position:
     m_InternalValue: {x: 0, y: 0, z: 0}
@@ -445,7 +446,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 1
+  UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
 --- !u!1 &5292195104388218719

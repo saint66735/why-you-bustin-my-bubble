@@ -61,6 +61,7 @@ public class Player : NetworkBehaviour
 
     void FixedUpdate()
     {
+        playerCamera.transform.position = cameraSlot.position;
         playerCamera.transform.parent = cameraSlot;
         //&& GameNetworkManager.instance.raceTime > 6f
         if (!GameNetworkManager.instance.isFreeroam ) {
@@ -165,25 +166,26 @@ public class Player : NetworkBehaviour
         if (NetworkManager.Singleton.IsServer)
         {
             var randomPosition = GetNextPositionOnPlane();
-            transform.position = randomPosition;
+            ship.transform.position = randomPosition;
             Position.Value = randomPosition;
         }
         else
         {
             SubmitPositionRequestServerRpc();
         }
-        transform.eulerAngles = new Vector3(0,0,0);
+        //transform.eulerAngles = new Vector3(0,0,0);
     }
 
     [ServerRpc]
     void SubmitPositionRequestServerRpc(ServerRpcParams rpcParams = default)
     {
         Position.Value = GetNextPositionOnPlane();
-        transform.position = Position.Value;
+        ship.transform.position = Position.Value;
     }
 
     Vector3 GetNextPositionOnPlane() {
-        return GameNetworkManager.instance.spawnPoints[0].position;
+        //TODO
+        return GameNetworkManager.instance.spawnPoints[NetworkManager.Singleton.ConnectedClients.Count-1].position;
     }
 
 }

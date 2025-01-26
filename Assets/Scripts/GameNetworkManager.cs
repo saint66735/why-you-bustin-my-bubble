@@ -122,7 +122,6 @@ public class GameNetworkManager : NetworkBehaviour {
     }
     
     //TODO
-    Debug.Log(playerInstances.Count);
     if (playerInstances.Count >= 1) {
       if(!raceStarted.Value) StartRace();
     }

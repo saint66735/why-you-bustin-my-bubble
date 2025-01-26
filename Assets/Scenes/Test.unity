@@ -378,7 +378,7 @@ PrefabInstance:
       objectReference: {fileID: 132938804}
     - target: {fileID: 4653235235567773354, guid: 44dd53f5b26035b4394040b1b33c686c, type: 3}
       propertyPath: spawnPoints.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4653235235567773354, guid: 44dd53f5b26035b4394040b1b33c686c, type: 3}
       propertyPath: playerPrefabs.Array.size
@@ -388,6 +388,10 @@ PrefabInstance:
       propertyPath: 'spawnPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 1081765004}
+    - target: {fileID: 4653235235567773354, guid: 44dd53f5b26035b4394040b1b33c686c, type: 3}
+      propertyPath: 'spawnPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1129059472}
     - target: {fileID: 4653235235567773354, guid: 44dd53f5b26035b4394040b1b33c686c, type: 3}
       propertyPath: 'playerPrefabs.Array.data[0]'
       value: 
@@ -467,6 +471,37 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.4082003, y: -0.79054546, z: 4.077486}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1129059471
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1129059472}
+  m_Layer: 0
+  m_Name: SpawnPoint (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1129059472
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129059471}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 6.4082003, y: -0.79054546, z: 38.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -787,6 +822,7 @@ SceneRoots:
   - {fileID: 1732236500}
   - {fileID: 315716250}
   - {fileID: 1081765004}
+  - {fileID: 1129059472}
   - {fileID: 132938803}
   - {fileID: 1266974905}
   - {fileID: 1184416531}

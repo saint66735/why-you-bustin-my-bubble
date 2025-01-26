@@ -39,12 +39,12 @@ public class UI_Manager : MonoBehaviour
             if (additionalPanel.activeInHierarchy)
             {
                 additionalPanel.SetActive(false);
-                Cursor.visible = false;
+                //Cursor.visible = false;
             }
             else
             {
                 additionalPanel.SetActive(true);
-                Cursor.visible = true;
+                //Cursor.visible = true;
             }
         }
 
@@ -53,7 +53,8 @@ public class UI_Manager : MonoBehaviour
             OnJoin();
         }
         if (Input.GetKeyDown(KeyCode.O)) {
-            GameNetworkManager.instance.isFreeroam = true;
+            //TODO
+            //GameNetworkManager.instance.isFreeroam = true;
             OnHost();
         }
         if (Input.GetKeyDown(KeyCode.L)) {
@@ -73,7 +74,7 @@ public class UI_Manager : MonoBehaviour
     {
         mainPanel.SetActive(false);
         additionalPanel.SetActive(false);
-        Cursor.visible = false;
+        //Cursor.visible = false;
     }
     void updateAddress()
     {
