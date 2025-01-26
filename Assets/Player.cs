@@ -125,8 +125,9 @@ public class Player : NetworkBehaviour
         {
             //rb.AddRelativeForce(Vector3.forward * t.verticalInput * speed, ForceMode.Acceleration);
             //rb.AddRelativeTorque(Vector3.up * t.horizontalInput * rotationSpeed, ForceMode.Acceleration);
-            transform.localPosition += transform.forward * t.verticalInput * speed;
-            transform.localRotation *= Quaternion.Euler(Vector3.up * t.horizontalInput * rotationSpeed);
+            transform.localPosition += ship.transform.InverseTransformDirection(transform.forward) * t.verticalInput * speed;
+            transform.localRotation *= Quaternion.Euler(ship.transform.up * t.horizontalInput * rotationSpeed);
+            transform.localRotation = Quaternion.Euler(0, transform.localRotation.eulerAngles.y, 0);
             //Controls(t);
         }
         
