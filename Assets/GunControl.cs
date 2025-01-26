@@ -82,5 +82,6 @@ public class GunControl : NetworkBehaviour
     {
         boom.Play();
         audioSource.PlayOneShot(audioClip);
+        ship.AddForce(transform.right * recoilForce, ForceMode.Impulse);
     }
 }
